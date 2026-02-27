@@ -1,6 +1,6 @@
 #!/bin/bash
 echo "Building project..."
-python3 -m pip install -r requirements.txt
+python3 -m pip install -r requirements.txt --break-system-packages
 
 echo "Make Migration..."
 python3 ecommerce/manage.py makemigrations
