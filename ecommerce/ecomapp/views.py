@@ -1,5 +1,7 @@
 from django.shortcuts import render,HttpResponse,redirect
 from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
 from django.conf import settings
 from .models import Product,Contact,Orders,OrderUpdate
 from math import ceil
@@ -104,4 +106,51 @@ def checkout(request):
 
     return render(request, 'checkout.html')
 
+
+def handleSignUp(request):
+    if request.method == "POST":
+        username = request.POST['username']
+        email = request.POST['email']
+        pass1 = request.POST['pass1']
+        pass2 = request.POST['pass2']
+
+        # Check for errors
+        if len(username) > 10:
+            messages.error(request, " Username must be under 10 characters")
+            return redirect('/signup/')
+
+        if pass1 != pass2:
+             messages.error(request, " Passwords do not match")
+             return redirect('/signup/')
+        
+        # Create the user
+        myuser = User.objects.create_user(username, email, pass1)
+        myuser.save()
+        messages.success(request, " Your account has been successfully created")
+        return redirect('/login/')
+
+    return render(request, 'signup.html')
+
+
+def handleLogin(request):
+    if request.method == "POST":
+        loginusername = request.POST['loginusername']
+        loginpassword = request.POST['loginpassword']
+
+        user = authenticate(username=loginusername, password=loginpassword)
+        
+        if user is not None:
+            login(request, user)
+            messages.success(request, " Successfully Logged In")
+            return redirect('/')
+        else:
+            messages.error(request, " Invalid credentials, please try again")
+            return redirect('/login/')
+            
+    return render(request, 'login.html')
+
+def handleLogout(request):
+    logout(request)
+    messages.success(request, " Successfully logged out")
+    return redirect('/')
 

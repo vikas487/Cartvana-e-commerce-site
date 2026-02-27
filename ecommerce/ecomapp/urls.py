@@ -9,8 +9,7 @@ urlpatterns = [
     path('tracker', views.tracker, name="TrackingStatus"),
     path('products/<int:myid>', views.productView, name="ProductView"),
     path('checkout/', views.checkout, name="Checkout"),
-
-
-
-
+    path('signup/', views.handleSignUp, name="handleSignUp"),
+    path('login/', views.handleLogin, name="handleLogin"),
+    path('logout/', views.handleLogout, name="handleLogout"),
 ]
